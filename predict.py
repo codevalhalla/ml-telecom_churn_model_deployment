@@ -22,7 +22,7 @@ def predict(customer):
     
     result = {
         'churn_probability': y_pred,
-        'churn': churn
+        'churn': bool(churn)
     }
     return jsonify(result)
 

@@ -56,24 +56,24 @@ del df_test['churn']
 
 numerical = ['tenure', 'monthlycharges', 'totalcharges']
 
-categorical = [
-    'gender',
-    'seniorcitizen',
-    'partner',
-    'dependents',
-    'phoneservice',
-    'multiplelines',
-    'internetservice',
-    'onlinesecurity',
-    'onlinebackup',
-    'deviceprotection',
-    'techsupport',
-    'streamingtv',
-    'streamingmovies',
-    'contract',
-    'paperlessbilling',
-    'paymentmethod',
-]
+categorical = {
+    "gender",
+    "seniorcitizen",
+    "partner",
+    "dependents",
+    "phoneservice",
+    "multiplelines",
+    "internetservice",
+    "onlinesecurity",
+    "onlinebackup",
+    "deviceprotection",
+    "techsupport",
+    "streamingtv",
+    "streamingmovies",
+    "contract",
+    "paperlessbilling",
+    "paymentmethod",
+}
 
 # training
 def train(df,y,C=1.0):
