@@ -14,7 +14,7 @@ app = Flask('Churn Prediction')
 @app.route('/predict', methods=['POST'])
 #function to predict churn probability
 def predict(customer):
-    customer = request.get_json(customer)
+    customer = request.get_json()
     
     X = dv.transform([customer])
     y_pred = model.predict_proba(X)[0,1]
