@@ -1,40 +1,19 @@
-# ## load the model
+
 
 import pickle 
+from flask import Flask
 
 input_file = 'model_C=0.1.bin'
 
-
+#load the model
 with open(input_file,'rb') as f_in:
     dv,model = pickle.load(f_in)
     
-customer = {
-    'gender': 'female',
-    'seniorcitizen': 0,
-    'partner': 'yes',
-    'dependents': 'no',
-    'phoneservice': 'no',
-    'multiplelines': 'no_phone',
-    'internetservice': 'dsl',
-    'onlinesecurity': 'no',
-    'onlinebackup': 'yes',
-    'deviceprotection': 'no',
-    'techsupport': 'no',
-    'streamingtv': 'no',
-    'streamingmovies': 'no',
-    'contract': 'month-to-month',
-    'paperlessbilling': 'yes',
-    'paymentmethod': 'electronic_check',
-    'tenure': 1,
-    'monthlycharges': 29.85,
-    'totalcharges': 29.85
-}
+app = Flask('Churn Prediction')
 
-
-X = dv.transform([customer])
-
-
-y_pred = model.predict_proba(X)[0,1]
-
-print('input',customer)
-print('Churn probability:',y_pred)
+@app.route('/predict', methods=['POST'])
+#function to predict churn probability
+def predict(customer):
+    X = dv.transform([customer])
+    y_pred = model.predict_proba(X)[0,1]
+    return y_pred
