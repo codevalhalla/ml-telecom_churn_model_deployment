@@ -4,7 +4,9 @@
 #importing libraries
 import pandas as pd
 import numpy as np 
-from tqdm.auto import tqdm
+import pickle
+
+
 
 #importing libraries of sklearn
 from sklearn.model_selection import train_test_split
@@ -18,6 +20,7 @@ from sklearn.metrics import roc_auc_score
 #parameters
 C = 0.1
 n_splits = 5
+output_file = f'model_C={C}.bin'
 
 # data preparation
 
@@ -93,7 +96,11 @@ def predict(df, dv, model):
 
     return y_pred
     
+#validation with kfold
+print(f"doing validation with C ={C} ")
+
 auc_scores = []
+fold =0
 kfold = KFold(n_splits=n_splits,shuffle=True,random_state=1)
 for train_idx, val_idx in kfold.split(df_full_train):
     df_train = df_full_train.iloc[train_idx]
@@ -107,64 +114,27 @@ for train_idx, val_idx in kfold.split(df_full_train):
 
     auc = roc_auc_score(y_val,y_pred)
     auc_scores.append(auc)
+    print(f"fold={fold}  auc={auc}")
+    fold +=1
+print('Validation results:')
 print(f"mean_auc: {np.mean(auc_scores):.3f} +- {np.std(auc_scores):.3f}\n")
 
 
-C=0.1
+#final evaluation on test set
+
+print("training of final model\n")
+
 dv,model = train(df_full_train,df_full_train['churn'].values,C=C)
 y_pred = predict(df_test,dv,model)
 
 auc = roc_auc_score(y_test,y_pred)
-auc
+print(f"auc of final model: {auc}")
 
+# save the model
 
-
-import pickle
-
-
-customer = {
-    'gender': 'female',
-    'seniorcitizen': 0,
-    'partner': 'yes',
-    'dependents': 'no',
-    'phoneservice': 'no',
-    'multiplelines': 'no_phone',
-    'internetservice': 'dsl',
-    'onlinesecurity': 'no',
-    'onlinebackup': 'yes',
-    'deviceprotection': 'no',
-    'techsupport': 'no',
-    'streamingtv': 'no',
-    'streamingmovies': 'no',
-    'contract': 'month-to-month',
-    'paperlessbilling': 'yes',
-    'paymentmethod': 'electronic_check',
-    'tenure': 1,
-    'monthlycharges': 29.85,
-    'totalcharges': 29.85
-}
-
-
-output_file = f'model_C={C}.bin'
-output_file
-
-# write the model to file
 with open(output_file,'wb') as f_out:
     pickle.dump((dv,model),f_out)
 
-
-# ## load the model
-
-input_file = 'model_C=0.1.bin'
-with open(input_file,'rb') as f_in:
-    dv,model = pickle.load(f_in)
-
-X = dv.transform([customer])
-
-
-model.predict_proba(X)[0,1]
-
-
-
+print(f"model saved to {output_file}")
 
 
