@@ -7,3 +7,5 @@ WORKDIR /app
 COPY ["Pipfile", "Pipfile.lock", "./"]
 
 RUN pipenv install --system --deploy
+
+COPY ["predict.py","model_C=0.1.bin","./"]
