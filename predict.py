@@ -9,7 +9,7 @@ input_file = 'model_C=0.1.bin'
 with open(input_file,'rb') as f_in:
     dv,model = pickle.load(f_in)
     
-app = Flask('Churn Prediction')
+app = Flask('Churn')
 
 @app.route('/predict', methods=['POST'])
 #function to predict churn probability
